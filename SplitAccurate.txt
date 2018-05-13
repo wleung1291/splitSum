@@ -1,0 +1,151 @@
+/*
+ * Filename: SplitAccurate.txt
+ * Author: Wilson Leung
+ * Date: 3/19/2017
+ */
+
+-----------
+Description
+-----------
+	The purpose of this program is to take in a single list of integers and 
+divide it into two separate lists as accurately as possible where the sum of 
+the integers in both lists are equal or close to equal.
+
+--------------
+How to compile
+--------------    
+	To compile this program, navigate to the directory containing the
+source files and type 'javac SplitAccurate.java'.
+
+----------
+How to run
+----------
+    To run the program, type 'java SplitAccurate'.
+
+
+--------
+Approach
+--------
+	In order to get a close sum in both arrays, I sorted the initial array from 
+lowest to largest and then reversed it to have largest to lowest. This was done
+by calling the function reverse(). The function reverse() is called in 
+splitAccurately(). 
+
+	With the reversed array, I can iterate through the largest values first.
+This way I can imitate a greedy algorithm by splitting the largest values 
+between the two arrays with the priority going to the array having the lowest 
+total sum. This will minimize the sum difference between the two arrays.
+
+	So far this will not always find the equal sum or minimum sum difference,
+so I calculated the sum difference between the two arrays and then iterated
+through the two arrays with a nested loop to find which indexed values were
+less than the difference. If found, the two indexed values, one from each
+array, were switched. The larger indexed value was switched to the array with 
+the lower total sum and vice versa to decrease the difference.
+
+	The two final arrays contain zeros because I used Arrays and had to 
+allocate a specific size. I call the function removeZeros() in 
+splitAccurately() to return arrays with only non-zero ints. I then combine 
+the two arrays to return a 2D array.
+
+
+---------
+Functions
+---------
+	/** Function name: public int[][] splitAccurately(int[] integerList)
+	 *
+	 * Description: This method will take in an int array and find the sum of 
+     *              equal or close to equal value between two arrays.
+     * Parameters: 
+     *    integerList - The array to split.
+     *
+     * Return Value: A 2D array.
+     **/ 
+
+	/** Function name: public int[] reverse(int[] array)
+  	 *
+   	 * Description: This method will take in an int array and sort it from 
+   	 *              least to greatest. It will then reverse that order.
+   	 * Parameters: 
+   	 *    array - The array to sort and reverse.
+  	 *
+  	 * Return Value: A sorted array.
+  	 **/ 
+
+    /** Function name: public int[] removeZeros(int[] array)
+     *
+     * Description: This method will take in an int array and count the number
+     *              of zeros, then create a copy of the array of length count
+     *				with the non-zero ints.
+     * Parameters: 
+     *    array - The array to process.
+     *
+     * Return Value: An array without zeros.
+     **/
+
+
+-------
+Testing
+-------
+	This program was tested using various sample arrays called and passed in 
+main(). After running these tests, it seems the program is not guaranteed to 
+find the answer but it does seem to find the equal sums. Some datasets include:
+
+    int intArr[] = {65,31,72,2,57,6,65,50}; PASS
+    This array has equal sums and the program returns equal arrays. 
+    Sums are 174 to 174.
+    ---------------------------------------------------------------------------
+    int intArr[] = {200, 50,40,60,20,5,25}; PASS
+    This array has equal sums and the program returns equal arrays. 
+    Sums are 200 to 200.
+	---------------------------------------------------------------------------
+    int intArr[] = {-2,-50,14,78,-8,-3,40,-4,-9}; PASS
+    This array has equal sums and the program returns equal arrays. 
+    Sums are 28 to 28.
+    ---------------------------------------------------------------------------
+    int intArr[] = {9,8,7,6,5,4,3,2,1}; PASS
+    The program returns close to equal as possible with a sum difference of 1. 
+    Sums are 23 to 22.
+    ---------------------------------------------------------------------------
+    int intArr[] = {12,64,10,67,99,92,78,16,2,66,90,32,21,15,81,14}; PASS
+    The program returns close to equal as possible with a sum difference of 1.
+    Sums are 379 to 380.
+	---------------------------------------------------------------------------
+    int intArr[] = {-2,-5,-8,-3,-4,-9}; PASS
+    The program returns close to equal as possible with a sum difference of 1.
+	Sums are -15 to -16.
+    ---------------------------------------------------------------------------
+    int intArr[] = {40,68,88,15,24,14,88,7,64}; FAIL
+    The program does not return as close to equal as possible. 
+    Array sums are 201 to 207.
+    A better outcome would be 202 to 206.
+    ---------------------------------------------------------------------------
+    int intArr[] = {200, 50,40,60,20,5}; FAIL
+    The program does not return as close to equal as possible. 
+    Array sums are 265 to 110.
+    A better outcome would be 200 to 175.
+	---------------------------------------------------------------------------
+    int intArr[] = {}; PASS
+	This empty array throws InvalidInputException.
+	
+
+--------------
+Big-O Notation
+--------------
+	In this section of code there are two for-loops each iterating N times, 
+where N is the length of the array. Inside the loops are if-statements that 
+involceaccessing indexed elements which is just O(1). 
+So runtime is O(N*N) = O(N^2)
+
+//code    
+for(int k = 0; k < arr1.length; k++){
+  for(int l = 0; l < arr2.length; l++){
+    diff = Math.abs(Arrays.stream(arr1).sum() - Arrays.stream(arr2).sum());
+    //if difference between indices is less than the diff, switch
+    if( Math.abs(arr1[k] - arr2[l]) < diff){
+      tmpv = arr1[k];
+      arr1[k] = arr2[l];
+      arr2[l] = tmpv;
+   }
+  }
+}
